@@ -6,13 +6,13 @@
 (define-constant ERR-NOT-AUTHORIZED (err u1000))
 
 ;; entrance 
-;; poolId, swapId, fromToken, toToken, weightX, weightY, dx, minDy => (dx, dy)
+;; poolType, swapFuncType, fromToken, toToken, weightX, weightY, dx, minDy => (dx, dy)
 ;;(batches (list 3 {pool: principal,poolType: uint, swapType: uint, fromToken: <ft-trait>, toToken: <ft-trait>,weight-x: uint, weight-y: uint, dx: uint, min-dy: (optional uint)}))
 
 (define-trait DispatcherInterface 
     (
         (swap 
-            ;; ({poolId: uint, swapId: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint, dx: uint, minDy: (optional uint)})
+            ;; ({poolType: uint, swapFuncType: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint, dx: uint, minDy: (optional uint)})
             (uint uint <ft-trait> <ft-trait> uint uint uint (optional uint))
             (response uint uint)
         )
@@ -56,20 +56,18 @@
 (define-constant ERR_JUMP_FAILED (err u1006))
 (define-public (unxswap 
     (baseRequest {fromToken: <ft-trait>, toToken: <ft-trait>, fromTokenAmount: uint, minReturnAmount: uint}) 
-    (batches (list 3 {dexType: uint, poolId: uint, swapId: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint, dx: uint, minDy: (optional uint)}))
+    (batches (list 3 {dexType: uint, poolType: uint, swapFuncType: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint, dx: uint, minDy: (optional uint)}))
     )
 
     (let
       (
           (batchLen (len batches))
-          (fromToken (get fromToken baseRequest))
           (toToken (get toToken baseRequest))
-          (fromTokenAmount (get fromTokenAmount baseRequest))
           (minReturnAmount (get minReturnAmount baseRequest))
           (batches0 (element-at? batches u0))
           (batches1 (element-at? batches u1))
           (batches2 (element-at? batches u2))
-          ;; (dispatcherImpl (var-get dispatcher))
+
           (sender tx-sender)
           (balanceBefore (try! (contract-call? toToken get-balance sender)))
       )
@@ -99,21 +97,30 @@
     
 )
 
-(define-private (handleJump0 (batch0 (optional {dexType: uint, poolId: uint, swapId: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint, dx: uint, minDy: (optional uint)}))) 
+(define-private (handleJump0 (batch0 (optional {dexType: uint, poolType: uint, swapFuncType: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint, dx: uint, minDy: (optional uint)}))) 
   (let
     (
       (batchInfo (unwrap! batch0 ERR_INVALID_BATCH))
-      (dexType (get dexType batchInfo))
-      (poolId (get poolId batchInfo))
-      (swapId (get swapId batchInfo))
-      (fromToken (get fromToken batchInfo))
-      (toToken (get toToken batchInfo))
-      (weightX (get weightX batchInfo))
-      (weightY (get weightY batchInfo))
+    ;;   (dexType (get dexType batchInfo))
+    ;;   (poolType (get poolType batchInfo))
+    ;;   (swapFuncType (get swapFuncType batchInfo))
+    ;;   (fromToken (get fromToken batchInfo))
+    ;;   (toToken (get toToken batchInfo))
+    ;;   (weightX (get weightX batchInfo))
+    ;;   (weightY (get weightY batchInfo))
       (dx (get dx batchInfo))
       (minDy (get minDy batchInfo))
       ;; 0xAAAA 0xBBBB.dispatcher
-      (dy (get dy (try! (contract-call? .dispatcher swap dexType poolId swapId fromToken toToken weightX weightY dx minDy))))
+      (dy (get dy (try! (contract-call? .dispatcher swap
+         (get dexType batchInfo)
+         (get poolType batchInfo)
+         (get swapFuncType batchInfo)
+         (get fromToken batchInfo)
+         (get toToken batchInfo)
+         (get weightX batchInfo)
+         (get weightY batchInfo)
+         (get dx batchInfo)
+         (get minDy batchInfo)))))
     )
     (asserts! (>= dy (default-to u0 minDy)) ERR_RETURN_AMOUNT_IS_NOT_ENOUGH)
     (ok {dx: dx, dy: dy})
@@ -121,15 +128,15 @@
 
 )
 (define-private (handleJump1 
-    (batch0 (optional {dexType: uint, poolId: uint, swapId: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint, dx: uint, minDy: (optional uint)}))
-    (batch1 (optional {dexType: uint, poolId: uint, swapId: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint, dx: uint, minDy: (optional uint)}))
+    (batch0 (optional {dexType: uint, poolType: uint, swapFuncType: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint, dx: uint, minDy: (optional uint)}))
+    (batch1 (optional {dexType: uint, poolType: uint, swapFuncType: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint, dx: uint, minDy: (optional uint)}))
 ) 
   (let
     (
       (batchInfo (unwrap! batch0 ERR_INVALID_BATCH))
       (dexType (get dexType batchInfo))
-      (poolId (get poolId batchInfo))
-      (swapId (get swapId batchInfo))
+      (poolType (get poolType batchInfo))
+      (swapFuncType (get swapFuncType batchInfo))
       (fromToken (get fromToken batchInfo))
       (toToken (get toToken batchInfo))
       (weightX (get weightX batchInfo))
@@ -137,7 +144,7 @@
       (dx (get dx batchInfo))
       (minDy (get minDy batchInfo))
       ;; 0xAAAA 0xBBBB.dispatcher
-      (dy (get dy (try! (contract-call? .dispatcher swap dexType poolId swapId fromToken toToken weightX weightY dx minDy))))
+      (dy (get dy (try! (contract-call? .dispatcher swap dexType poolType swapFuncType fromToken toToken weightX weightY dx minDy))))
     )
     (asserts! (>= dy (default-to u0 minDy)) ERR_RETURN_AMOUNT_IS_NOT_ENOUGH)
     (ok {dx: dx, dy: dy})
@@ -145,16 +152,16 @@
 
 )
 (define-private (handleJump2 
-    (batch0 (optional {dexType: uint, poolId: uint, swapId: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint, dx: uint, minDy: (optional uint)}))
-    (batch1 (optional {dexType: uint, poolId: uint, swapId: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint, dx: uint, minDy: (optional uint)}))
-    (batch2 (optional {dexType: uint, poolId: uint, swapId: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint, dx: uint, minDy: (optional uint)}))
+    (batch0 (optional {dexType: uint, poolType: uint, swapFuncType: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint, dx: uint, minDy: (optional uint)}))
+    (batch1 (optional {dexType: uint, poolType: uint, swapFuncType: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint, dx: uint, minDy: (optional uint)}))
+    (batch2 (optional {dexType: uint, poolType: uint, swapFuncType: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint, dx: uint, minDy: (optional uint)}))
 ) 
   (let
     (
       (batchInfo (unwrap! batch0 ERR_INVALID_BATCH))
       (dexType (get dexType batchInfo))
-      (poolId (get poolId batchInfo))
-      (swapId (get swapId batchInfo))
+      (poolType (get poolType batchInfo))
+      (swapFuncType (get swapFuncType batchInfo))
       (fromToken (get fromToken batchInfo))
       (toToken (get toToken batchInfo))
       (weightX (get weightX batchInfo))
@@ -162,7 +169,7 @@
       (dx (get dx batchInfo))
       (minDy (get minDy batchInfo))
       ;; 0xAAAA 0xBBBB.dispatcher
-      (dy (get dy (try! (contract-call? .dispatcher swap dexType poolId swapId fromToken toToken weightX weightY dx minDy))))
+      (dy (get dy (try! (contract-call? .dispatcher swap dexType poolType swapFuncType fromToken toToken weightX weightY dx minDy))))
     )
     (asserts! (>= dy (default-to u0 minDy)) ERR_RETURN_AMOUNT_IS_NOT_ENOUGH)
     (ok {dx: dx, dy: dy})
