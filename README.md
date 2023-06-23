@@ -10,4 +10,4 @@ Before you run, we use a custom dependency management tool, so please run the fo
 > sh ./scripts/clarinet_manager.sh install alex_dao
 ```
 
-The list of dependencies (not all are required) is available here: https://github.com/alexgo-io/alex-v1/blob/main/clarity/Clarinet.json
+
