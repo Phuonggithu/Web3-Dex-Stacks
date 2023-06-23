@@ -12,7 +12,7 @@
     (let
         (
             (dy (if (is-eq DEX_TYPE_ALEX dexType)
-                    (get dy (try! (contract-call? .alexAdapter swapAlex poolId swapFuncId fromToken toToken weightX weightY dx minDy)))
+                    (get dy (try! (contract-call? .alexAdapter swap poolId swapFuncId fromToken toToken weightX weightY dx minDy)))
                     u0
                 )
             )

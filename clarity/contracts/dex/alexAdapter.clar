@@ -20,7 +20,7 @@
 (define-constant FIXED_WEIGHT u2000001)
 (define-constant STABLE_POOL u2000002)
 
-(define-public (swapAlex (poolId uint) (swapFuncId uint) (fromToken <ft-trait>) (toToken <ft-trait>) (weightX uint) (weightY uint) (dx uint) (minDy (optional uint))) 
+(define-public (swap (poolId uint) (swapFuncId uint) (fromToken <ft-trait>) (toToken <ft-trait>) (weightX uint) (weightY uint) (dx uint) (minDy (optional uint))) 
     (let 
         (
             (dy (if (is-eq FIXED_WEIGHT poolId)

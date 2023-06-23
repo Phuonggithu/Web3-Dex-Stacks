@@ -1,2 +1,0 @@
-(contract-call? .testDex setUp)
-(contract-call? .testDex )
