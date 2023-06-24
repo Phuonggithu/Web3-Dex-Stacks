@@ -87,7 +87,7 @@
             fromTokenAmount: amount, 
             minReturnAmount: u0}
             (list 
-                {dexType: DEX_TYPE_ALEX, 
+                {adapterImpl: .alexAdapter, 
                 poolType: FIXED_WEIGHT, 
                 swapFuncType: SWAP_Y_FOR_WSTX, 
                 fromToken: .token-usda, 
@@ -115,7 +115,7 @@
             fromTokenAmount: amount, 
             minReturnAmount: u0}
             (list 
-                {dexType: DEX_TYPE_ALEX, 
+                {adapterImpl: .alexAdapter, 
                 poolType: FIXED_WEIGHT, 
                 swapFuncType: SWAP_Y_FOR_WSTX, 
                 fromToken: .token-usda, 
@@ -124,7 +124,7 @@
                 weightY: weight, 
                 dx: amount, 
                 minDy: none}
-                {dexType: DEX_TYPE_ALEX, 
+                {adapterImpl: .alexAdapter, 
                 poolType: FIXED_WEIGHT, 
                 swapFuncType: SWAP_WSTX_FOR_Y, 
                 fromToken: .token-wstx, 
@@ -142,61 +142,37 @@
 ;; ::trace (contract-call? .testDex test_swapJump1)
 ;; (contract-call? .testDex test_swapJump0Direct)
 ;; ::get_assets_maps
-(define-public (test_swapJump0Direct) 
-    (let
-        (   
-            (weightUSDA u50000000)
-            (weightWSTX u50000000)
-            (amount u10000000)
 
-            (dy (get dy (try! (contract-call? .dispatcher swap 
-                                                DEX_TYPE_ALEX 
-                                                FIXED_WEIGHT 
-                                                SWAP_Y_FOR_WSTX 
-                                                .token-usda 
-                                                .token-wstx 
-                                                weightUSDA 
-                                                weightWSTX 
-                                                amount 
-                                                none)) 
-            ))
-            
-        )
-        (asserts! (is-eq dy u6500000) (err u0))
-        (print {dy: dy})
-        (ok dy)
-    )
-)
 ;; (contract-call? .testDex setUp)
 ;; ::trace (contract-call? .testDex test_1)
 ;; ::trace (contract-call? .testDex test_swapJump0)
 ;; (contract-call? .testDex test_swapJump0Direct)
 ;; ::get_assets_maps
-(define-public (test_1) 
-    (let
-        (
-            (weightUSDA u50000000)
-            (weightWSTX u50000000)
-            (amount u10000000)
-        ) 
-        ;; swap usda for wstx through fixed weight pool
-        (try! (contract-call? .aggregator handleJump0 
-            (some
-                {dexType: DEX_TYPE_ALEX, 
-                poolType: FIXED_WEIGHT, 
-                swapFuncType: SWAP_Y_FOR_WSTX, 
-                fromToken: .token-usda, 
-                toToken: .token-wstx, 
-                weightX: weightUSDA, 
-                weightY: weightWSTX, 
-                dx: amount, 
-                minDy: none}
-            )
-            amount
-        ))
-        (ok true)
-    )
-)
+;; (define-public (test_1) 
+;;     (let
+;;         (
+;;             (weightUSDA u50000000)
+;;             (weightWSTX u50000000)
+;;             (amount u10000000)
+;;         ) 
+;;         ;; swap usda for wstx through fixed weight pool
+;;         (try! (contract-call? .aggregator handleJump0 
+;;             (some
+;;                 {dexType: DEX_TYPE_ALEX, 
+;;                 poolType: FIXED_WEIGHT, 
+;;                 swapFuncType: SWAP_Y_FOR_WSTX, 
+;;                 fromToken: .token-usda, 
+;;                 toToken: .token-wstx, 
+;;                 weightX: weightUSDA, 
+;;                 weightY: weightWSTX, 
+;;                 dx: amount, 
+;;                 minDy: none}
+;;             )
+;;             amount
+;;         ))
+;;         (ok true)
+;;     )
+;; )
 
 ;; (define-public (test_2) 
 ;;     (let

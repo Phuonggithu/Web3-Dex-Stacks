@@ -1,4 +1,5 @@
 
+(impl-trait .dispatcherTrait.DispatcherInterface)
 
 (use-trait ft-trait .trait-sip-010.sip-010-trait)
 
@@ -41,7 +42,7 @@
                 )
             )
         )
-        (ok {dx: u0, dy: dy})
+        (ok {dx: dx, dy: dy})
     )
 )
 

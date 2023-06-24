@@ -1126,10 +1126,6 @@ path = 'contracts/dex/alexAdapter.clar'
 clarity_version = 2
 epoch = 2.1
 
-[contracts.dispatcher]
-path = 'contracts/dex/dispatcher.clar'
-clarity_version = 2
-epoch = 2.1
 
 [contracts.aggregator]
 path = 'contracts/dex/aggregator.clar'
@@ -1138,5 +1134,10 @@ epoch = 2.1
 
 [contracts.testDex]
 path = 'contracts/dex/testDex.clar'
+clarity_version = 2
+epoch = 2.1
+
+[contracts.dispatcherTrait]
+path = 'contracts/dex/dispatcherTrait.clar'
 clarity_version = 2
 epoch = 2.1
