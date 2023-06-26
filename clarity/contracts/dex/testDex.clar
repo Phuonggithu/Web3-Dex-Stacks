@@ -94,6 +94,7 @@
                 toToken: .token-wstx, 
                 weightX: weightUSDA, 
                 weightY: weightWSTX, 
+                factor: u0,
                 dx: amount, 
                 minDy: none}
             )
@@ -122,6 +123,7 @@
                 toToken: .token-wstx, 
                 weightX: weight, 
                 weightY: weight, 
+                factor: u0,
                 dx: amount, 
                 minDy: none}
                 {adapterImpl: .alexAdapter, 
@@ -131,6 +133,7 @@
                 toToken: .token-xbtc, 
                 weightX: weight, 
                 weightY: weight, 
+                factor: u0,
                 dx: amount, 
                 minDy: none}
             )

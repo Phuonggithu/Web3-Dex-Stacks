@@ -1,0 +1,344 @@
+{
+    "txid": "0xTxid([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])",
+    "event_index": 0,
+    "committed": true,
+    "type": "contract_event",
+    "contract_event": {
+        "contract_identifier": "ST1HTBVD3JG9C05J7HBJTHGR0GGW7KXW28M5JS8QE.aggregator",
+        "topic": "print",
+        "value": {
+            "Tuple": {
+                "type_signature": {
+                    "type_map": {
+                        "orderRecord": {
+                            "TupleType": {
+                                "type_map": {
+                                    "fromAmount": "UIntType",
+                                    "fromToken": {
+                                        "CallableType": {
+                                            "Trait": {
+                                                "name": "sip-010-trait",
+                                                "contract_identifier": {
+                                                    "issuer": [
+                                                        26,
+                                                        [
+                                                            99,
+                                                            165,
+                                                            237,
+                                                            163,
+                                                            148,
+                                                            18,
+                                                            192,
+                                                            22,
+                                                            71,
+                                                            138,
+                                                            229,
+                                                            168,
+                                                            195,
+                                                            0,
+                                                            132,
+                                                            56,
+                                                            121,
+                                                            247,
+                                                            130,
+                                                            69
+                                                        ]
+                                                    ],
+                                                    "name": "trait-sip-010"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "returnAmount": "UIntType",
+                                    "sender": "PrincipalType",
+                                    "toToken": {
+                                        "CallableType": {
+                                            "Trait": {
+                                                "name": "sip-010-trait",
+                                                "contract_identifier": {
+                                                    "issuer": [
+                                                        26,
+                                                        [
+                                                            99,
+                                                            165,
+                                                            237,
+                                                            163,
+                                                            148,
+                                                            18,
+                                                            192,
+                                                            22,
+                                                            71,
+                                                            138,
+                                                            229,
+                                                            168,
+                                                            195,
+                                                            0,
+                                                            132,
+                                                            56,
+                                                            121,
+                                                            247,
+                                                            130,
+                                                            69
+                                                        ]
+                                                    ],
+                                                    "name": "trait-sip-010"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "data_map": {
+                    "orderRecord": {
+                        "Tuple": {
+                            "type_signature": {
+                                "type_map": {
+                                    "fromAmount": "UIntType",
+                                    "fromToken": {
+                                        "CallableType": {
+                                            "Trait": {
+                                                "name": "sip-010-trait",
+                                                "contract_identifier": {
+                                                    "issuer": [
+                                                        26,
+                                                        [
+                                                            99,
+                                                            165,
+                                                            237,
+                                                            163,
+                                                            148,
+                                                            18,
+                                                            192,
+                                                            22,
+                                                            71,
+                                                            138,
+                                                            229,
+                                                            168,
+                                                            195,
+                                                            0,
+                                                            132,
+                                                            56,
+                                                            121,
+                                                            247,
+                                                            130,
+                                                            69
+                                                        ]
+                                                    ],
+                                                    "name": "trait-sip-010"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "returnAmount": "UIntType",
+                                    "sender": "PrincipalType",
+                                    "toToken": {
+                                        "CallableType": {
+                                            "Trait": {
+                                                "name": "sip-010-trait",
+                                                "contract_identifier": {
+                                                    "issuer": [
+                                                        26,
+                                                        [
+                                                            99,
+                                                            165,
+                                                            237,
+                                                            163,
+                                                            148,
+                                                            18,
+                                                            192,
+                                                            22,
+                                                            71,
+                                                            138,
+                                                            229,
+                                                            168,
+                                                            195,
+                                                            0,
+                                                            132,
+                                                            56,
+                                                            121,
+                                                            247,
+                                                            130,
+                                                            69
+                                                        ]
+                                                    ],
+                                                    "name": "trait-sip-010"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "data_map": {
+                                "fromAmount": {
+                                    "UInt": 1000000000
+                                },
+                                "fromToken": {
+                                    "CallableContract": {
+                                        "contract_identifier": {
+                                            "issuer": [
+                                                26,
+                                                [
+                                                    99,
+                                                    165,
+                                                    237,
+                                                    163,
+                                                    148,
+                                                    18,
+                                                    192,
+                                                    22,
+                                                    71,
+                                                    138,
+                                                    229,
+                                                    168,
+                                                    195,
+                                                    0,
+                                                    132,
+                                                    56,
+                                                    121,
+                                                    247,
+                                                    130,
+                                                    69
+                                                ]
+                                            ],
+                                            "name": "token-usda"
+                                        },
+                                        "trait_identifier": {
+                                            "name": "sip-010-trait",
+                                            "contract_identifier": {
+                                                "issuer": [
+                                                    26,
+                                                    [
+                                                        99,
+                                                        165,
+                                                        237,
+                                                        163,
+                                                        148,
+                                                        18,
+                                                        192,
+                                                        22,
+                                                        71,
+                                                        138,
+                                                        229,
+                                                        168,
+                                                        195,
+                                                        0,
+                                                        132,
+                                                        56,
+                                                        121,
+                                                        247,
+                                                        130,
+                                                        69
+                                                    ]
+                                                ],
+                                                "name": "trait-sip-010"
+                                            }
+                                        }
+                                    }
+                                },
+                                "returnAmount": {
+                                    "UInt": 19868
+                                },
+                                "sender": {
+                                    "Principal": {
+                                        "Standard": [
+                                            26,
+                                            [
+                                                99,
+                                                165,
+                                                237,
+                                                163,
+                                                148,
+                                                18,
+                                                192,
+                                                22,
+                                                71,
+                                                138,
+                                                229,
+                                                168,
+                                                195,
+                                                0,
+                                                132,
+                                                56,
+                                                121,
+                                                247,
+                                                130,
+                                                69
+                                            ]
+                                        ]
+                                    }
+                                },
+                                "toToken": {
+                                    "CallableContract": {
+                                        "contract_identifier": {
+                                            "issuer": [
+                                                26,
+                                                [
+                                                    99,
+                                                    165,
+                                                    237,
+                                                    163,
+                                                    148,
+                                                    18,
+                                                    192,
+                                                    22,
+                                                    71,
+                                                    138,
+                                                    229,
+                                                    168,
+                                                    195,
+                                                    0,
+                                                    132,
+                                                    56,
+                                                    121,
+                                                    247,
+                                                    130,
+                                                    69
+                                                ]
+                                            ],
+                                            "name": "token-xbtc"
+                                        },
+                                        "trait_identifier": {
+                                            "name": "sip-010-trait",
+                                            "contract_identifier": {
+                                                "issuer": [
+                                                    26,
+                                                    [
+                                                        99,
+                                                        165,
+                                                        237,
+                                                        163,
+                                                        148,
+                                                        18,
+                                                        192,
+                                                        22,
+                                                        71,
+                                                        138,
+                                                        229,
+                                                        168,
+                                                        195,
+                                                        0,
+                                                        132,
+                                                        56,
+                                                        121,
+                                                        247,
+                                                        130,
+                                                        69
+                                                    ]
+                                                ],
+                                                "name": "trait-sip-010"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "raw_value": "0x0c000000010b6f726465725265636f72640c000000050a66726f6d416d6f756e74010000000000000000000000003b9aca000966726f6d546f6b656e061a63a5eda39412c016478ae5a8c300843879f782450a746f6b656e2d757364610c72657475726e416d6f756e740100000000000000000000000000004d9c0673656e646572051a63a5eda39412c016478ae5a8c300843879f7824507746f546f6b656e061a63a5eda39412c016478ae5a8c300843879f782450a746f6b656e2d78627463"
+    }
+}

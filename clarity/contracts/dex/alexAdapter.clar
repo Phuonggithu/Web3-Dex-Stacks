@@ -17,74 +17,172 @@
 (define-constant SWAP_Y_FOR_ALEX u1000002)
 (define-constant SWAP_WSTX_FOR_Y u1000003)
 (define-constant SWAP_Y_FOR_WSTX u1000004)
+(define-constant SWAP_X_FOR_Y    u1000005)
+(define-constant SWAP_Y_FOR_X    u1000005)
 
 (define-constant FIXED_WEIGHT u2000001)
 (define-constant STABLE_POOL u2000002)
+(define-constant TRADING_POOL u2000003)
+(define-constant SIMPLE_WEIGHT u2000004)
 
-(define-public (swap (poolId uint) (swapFuncId uint) (fromToken <ft-trait>) (toToken <ft-trait>) (weightX uint) (weightY uint) (dx uint) (minDy (optional uint))) 
+(define-public (swap (poolId uint) (swapFuncId uint) (fromToken <ft-trait>) (toToken <ft-trait>) (weightX uint) (weightY uint) (factor uint) (dx uint) (minDy (optional uint))) 
     (let 
         (
             (dy (if (is-eq FIXED_WEIGHT poolId)
-                    (if (is-eq SWAP_ALEX_FOR_Y swapFuncId)
-                        (get dy (try! (handleSwapAlexForYFixed fromToken toToken weightX weightY dx minDy)))
-                        (if (is-eq SWAP_Y_FOR_ALEX swapFuncId)
-                            (get dx (try! (handleSwapYForAlexFixed fromToken toToken weightX weightY dx minDy)))
-                            (if (is-eq SWAP_WSTX_FOR_Y swapFuncId)
-                                (get dy (try! (handleSwapWstxForYFixed fromToken toToken weightX weightY dx minDy)))
-                                (if (is-eq SWAP_Y_FOR_WSTX swapFuncId)
-                                    (get dx (try! (handleSwapYForWstxFixed fromToken toToken weightX weightY dx minDy)))
+                    (if (is-eq SWAP_WSTX_FOR_Y swapFuncId)
+                        (get dy (try! (handleSwapWstxForYFixed fromToken toToken weightX weightY dx minDy)))
+                        (if (is-eq SWAP_Y_FOR_WSTX swapFuncId)
+                            (get dx (try! (handleSwapYForWstxFixed fromToken toToken weightX weightY dx minDy)))
+                            u0
+                        )
+                    )
+                    ;; (if (is-eq SWAP_ALEX_FOR_Y swapFuncId)
+                    ;;     (get dy (try! (handleSwapAlexForYFixed fromToken toToken weightX weightY dx minDy)))
+                    ;;     (if (is-eq SWAP_Y_FOR_ALEX swapFuncId)
+                    ;;         (get dx (try! (handleSwapYForAlexFixed fromToken toToken weightX weightY dx minDy)))
+                    ;;         (if (is-eq SWAP_WSTX_FOR_Y swapFuncId)
+                    ;;             (get dy (try! (handleSwapWstxForYFixed fromToken toToken weightX weightY dx minDy)))
+                    ;;             (if (is-eq SWAP_Y_FOR_WSTX swapFuncId)
+                    ;;                 (get dx (try! (handleSwapYForWstxFixed fromToken toToken weightX weightY dx minDy)))
+                    ;;                 u0
+                    ;;             )
+                    ;;         )
+                    ;;     )
+                    ;; )
+                    (if (is-eq TRADING_POOL poolId)
+                        (if (is-eq SWAP_X_FOR_Y swapFuncId)
+                            (get dy (try! (handleSwapXForYTrading fromToken toToken factor dx minDy)))
+                            (if (is-eq SWAP_Y_FOR_X swapFuncId)
+                                (get dx (try! (handleSwapYForXTrading fromToken toToken factor dx minDy)))
+                                u0
+                            )
+                        )
+                        (if (is-eq SIMPLE_WEIGHT poolId)
+                            (if (is-eq SWAP_ALEX_FOR_Y swapFuncId)
+                                (get dy (try! (handleSwapAlexForYSimple fromToken toToken dx minDy)))
+                                (if (is-eq SWAP_Y_FOR_ALEX swapFuncId)
+                                    (get dx (try! (handleSwapYForAlexSimple fromToken toToken dx minDy)))
                                     u0
                                 )
                             )
+                            u0
                         )
                     )
-                    u0
                 )
             )
         )
-        (ok {dx: dx, dy: dy})
+        (ok {dy: dy})
     )
 )
 
-(define-private (handleSwapAlexForYFixed (fromToken <ft-trait>) (toToken <ft-trait>) (weightFrom uint) (weightTo uint) (dx uint) (minDy (optional uint))) 
+;; consider fromToken is alex
+(define-private (handleSwapAlexForYSimple (fromToken <ft-trait>) (toToken <ft-trait>)  (dx uint) (minDy (optional uint))) 
     (let
         (
             (fromTokenAddr (contract-of fromToken))
             (alexTokenAddr .age000-governance-token)
             (tokenY toToken)
-            (weightY weightTo)
-            (weightX (- ONE_8 weightY))
             (tokenYAddr (contract-of tokenY))
         )
-        (asserts! (is-eq (+ weightFrom weightTo) ONE_8) ERR_WEIGHT_SUM)
-        ;; check fromToken == wstx
+        ;; check fromToken == alex
         (asserts! (is-eq alexTokenAddr fromTokenAddr) ERR_FROM_TOKEN_NOT_MATCH)
         ;; check pool exists
-        (asserts! (is-some (contract-call? .fixed-weight-pool-alex get-pool-exists alexTokenAddr tokenYAddr weightX weightY)) ERR_POOL_NOT_EXISTS)
+        (asserts! (is-some (contract-call? .simple-weight-pool-alex get-pool-exists alexTokenAddr tokenYAddr)) ERR_POOL_NOT_EXISTS)
         ;; contract call do the real swap
-        (contract-call? .fixed-weight-pool-alex swap-alex-for-y tokenY weightY dx minDy)
+        (contract-call? .simple-weight-pool-alex swap-alex-for-y tokenY dx minDy)
     )
 )
 
-(define-private (handleSwapYForAlexFixed (fromToken <ft-trait>) (toToken <ft-trait>) (weightFrom uint) (weightTo uint) (dx uint) (minDy (optional uint))) 
+;; consider toToken is alex
+(define-private (handleSwapYForAlexSimple (fromToken <ft-trait>) (toToken <ft-trait>)  (dx uint) (minDy (optional uint))) 
     (let
         (
             (toTokenAddr (contract-of toToken))
             (alexTokenAddr .age000-governance-token)
             (tokenY fromToken)
-            (weightY weightFrom)
-            (weightX (- ONE_8 weightY))
             (tokenYAddr (contract-of tokenY))
         )
-        (asserts! (is-eq (+ weightFrom weightTo) ONE_8) ERR_WEIGHT_SUM)
-        ;; check fromToken == wstx
-        (asserts! (is-eq alexTokenAddr toTokenAddr) ERR_TO_TOKEN_NOT_MATCH)
+        ;; check fromToken == alex
+        (asserts! (is-eq alexTokenAddr toTokenAddr) ERR_FROM_TOKEN_NOT_MATCH)
         ;; check pool exists
-        (asserts! (is-some (contract-call? .fixed-weight-pool-alex get-pool-exists alexTokenAddr tokenYAddr weightX weightY)) ERR_POOL_NOT_EXISTS)
+        (asserts! (is-some (contract-call? .simple-weight-pool-alex get-pool-exists alexTokenAddr tokenYAddr)) ERR_POOL_NOT_EXISTS)
         ;; contract call do the real swap
-        (contract-call? .fixed-weight-pool-alex swap-y-for-alex tokenY weightY dx minDy)
+        (contract-call? .simple-weight-pool-alex swap-y-for-alex tokenY dx minDy)
     )
 )
+
+;; consider fromToken is tokenX
+(define-private (handleSwapXForYTrading (fromToken <ft-trait>) (toToken <ft-trait>) (factor uint) (dx uint) (minDy (optional uint))) 
+    (let
+        (
+            (tokenX fromToken)
+            (tokenY toToken)
+            (tokenXAddr (contract-of tokenX))
+            (tokenYAddr (contract-of tokenY))
+        )
+        ;; check pool exists
+        (asserts! (is-some (contract-call? .amm-swap-pool-v1-1 get-pool-exists tokenXAddr tokenYAddr factor)) ERR_POOL_NOT_EXISTS)
+        ;; contract call do the real swap
+        (contract-call? .amm-swap-pool-v1-1 swap-x-for-y tokenX tokenY factor dx minDy)
+    )
+)
+
+;; consider fromToken is tokenY
+(define-private (handleSwapYForXTrading (fromToken <ft-trait>) (toToken <ft-trait>) (factor uint) (dx uint) (minDy (optional uint))) 
+    (let
+        (
+            (tokenX toToken)
+            (tokenY fromToken)
+            (tokenXAddr (contract-of tokenX))
+            (tokenYAddr (contract-of tokenY))
+        )
+        ;; check pool exists
+        (asserts! (is-some (contract-call? .amm-swap-pool-v1-1 get-pool-exists tokenXAddr tokenYAddr factor)) ERR_POOL_NOT_EXISTS)
+        ;; contract call do the real swap
+        (contract-call? .amm-swap-pool-v1-1 swap-y-for-x tokenX tokenY factor dx minDy)
+    )
+)
+
+
+;; (define-private (handleSwapAlexForYFixed (fromToken <ft-trait>) (toToken <ft-trait>) (weightFrom uint) (weightTo uint) (dx uint) (minDy (optional uint))) 
+;;     (let
+;;         (
+;;             (fromTokenAddr (contract-of fromToken))
+;;             (alexTokenAddr .age000-governance-token)
+;;             (tokenY toToken)
+;;             (weightY weightTo)
+;;             (weightX (- ONE_8 weightY))
+;;             (tokenYAddr (contract-of tokenY))
+;;         )
+;;         (asserts! (is-eq (+ weightFrom weightTo) ONE_8) ERR_WEIGHT_SUM)
+;;         ;; check fromToken == wstx
+;;         (asserts! (is-eq alexTokenAddr fromTokenAddr) ERR_FROM_TOKEN_NOT_MATCH)
+;;         ;; check pool exists
+;;         (asserts! (is-some (contract-call? .fixed-weight-pool-alex get-pool-exists alexTokenAddr tokenYAddr weightX weightY)) ERR_POOL_NOT_EXISTS)
+;;         ;; contract call do the real swap
+;;         (contract-call? .fixed-weight-pool-alex swap-alex-for-y tokenY weightY dx minDy)
+;;     )
+;; )
+
+;; (define-private (handleSwapYForAlexFixed (fromToken <ft-trait>) (toToken <ft-trait>) (weightFrom uint) (weightTo uint) (dx uint) (minDy (optional uint))) 
+;;     (let
+;;         (
+;;             (toTokenAddr (contract-of toToken))
+;;             (alexTokenAddr .age000-governance-token)
+;;             (tokenY fromToken)
+;;             (weightY weightFrom)
+;;             (weightX (- ONE_8 weightY))
+;;             (tokenYAddr (contract-of tokenY))
+;;         )
+;;         (asserts! (is-eq (+ weightFrom weightTo) ONE_8) ERR_WEIGHT_SUM)
+;;         ;; check fromToken == wstx
+;;         (asserts! (is-eq alexTokenAddr toTokenAddr) ERR_TO_TOKEN_NOT_MATCH)
+;;         ;; check pool exists
+;;         (asserts! (is-some (contract-call? .fixed-weight-pool-alex get-pool-exists alexTokenAddr tokenYAddr weightX weightY)) ERR_POOL_NOT_EXISTS)
+;;         ;; contract call do the real swap
+;;         (contract-call? .fixed-weight-pool-alex swap-y-for-alex tokenY weightY dx minDy)
+;;     )
+;; )
 
 (define-private (handleSwapWstxForYFixed (fromToken <ft-trait>) (toToken <ft-trait>) (weightFrom uint) (weightTo uint) (dx uint) (minDy (optional uint))) 
     (let

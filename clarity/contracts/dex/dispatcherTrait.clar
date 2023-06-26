@@ -3,9 +3,9 @@
 (define-trait DispatcherInterface 
     (
         (swap 
-            ;; ({poolType: uint, swapFuncType: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint, dx: uint, minDy: (optional uint)})
-            (uint uint <ft-trait> <ft-trait> uint uint uint (optional uint))
-            (response {dx: uint, dy: uint} uint)
+            ;; ({poolType: uint, swapFuncType: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint,factor uint, dx: uint, minDy: (optional uint)})
+            (uint uint <ft-trait> <ft-trait> uint uint uint uint (optional uint))
+            (response {dy: uint} uint)
         )
     )
 )
