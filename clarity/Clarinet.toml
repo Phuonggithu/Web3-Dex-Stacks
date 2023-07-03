@@ -1126,6 +1126,10 @@ path = 'contracts/dex/alexAdapter.clar'
 clarity_version = 2
 epoch = 2.1
 
+[contracts.arkadAdapter]
+path = 'contracts/dex/arkadAdapter.clar'
+clarity_version = 2
+epoch = 2.1
 
 [contracts.aggregator]
 path = 'contracts/dex/aggregator.clar'
@@ -1139,5 +1143,45 @@ epoch = 2.1
 
 [contracts.dispatcherTrait]
 path = 'contracts/dex/dispatcherTrait.clar'
+clarity_version = 2
+epoch = 2.1
+
+[contracts.sip-010-trait-ft-standard]
+path = 'contracts/dex/arkadiko/sip-010-trait-ft-standard.clar'
+clarity_version = 2
+epoch = 2.1
+
+[contracts.arkadiko-dao]
+path = 'contracts/dex/arkadiko/arkadiko-dao.clar'
+clarity_version = 2
+epoch = 2.1
+
+[contracts.arkadiko-dao-token-trait-v1]
+path = 'contracts/dex/arkadiko/arkadiko-dao-token-trait-v1.clar'
+clarity_version = 2
+epoch = 2.1
+
+[contracts.arkadiko-swap-token-wstx-usda]
+path = 'contracts/dex/arkadiko/arkadiko-swap-token-wstx-usda.clar'
+clarity_version = 2
+epoch = 2.1
+
+[contracts.arkadiko-swap-trait-v1]
+path = 'contracts/dex/arkadiko/arkadiko-swap-trait-v1.clar'
+clarity_version = 2
+epoch = 2.1
+
+[contracts.arkadiko-swap-v2-1]
+path = 'contracts/dex/arkadiko/arkadiko-swap-v2-1.clar'
+clarity_version = 2
+epoch = 2.1
+
+[contracts.usda-token]
+path = 'contracts/dex/arkadiko/usda-token.clar'
+clarity_version = 2
+epoch = 2.1
+
+[contracts.wrapped-stx-token]
+path = 'contracts/dex/arkadiko/wrapped-stx-token.clar'
 clarity_version = 2
 epoch = 2.1

@@ -1,6 +1,8 @@
 
 
-(use-trait ft-trait .trait-sip-010.sip-010-trait)
+(use-trait ft-trait-arka .sip-010-trait-ft-standard.sip-010-trait)
+(use-trait ft-trait-alex .trait-sip-010.sip-010-trait)
+
 (use-trait dispatcherInterface .dispatcherTrait.DispatcherInterface)
 
 (define-constant ONE_8 u100000000) ;; 8 decimal places
@@ -15,30 +17,20 @@
 (define-constant ERR_NOT_OK (err u1007))
 (define-constant ERR_NOT_AUTHORIZED (err u1008))
 
-(define-read-only (get-contract-owner)
-  (ok (var-get contract-owner))
-)
-
-(define-public (set-contract-owner (owner principal))
-  (begin
-    (try! (check-is-owner)) 
-    (ok (var-set contract-owner owner))
-  )
-)
-
-
-
-(define-private (check-is-owner)
-  (ok (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_NOT_AUTHORIZED))
-)
-
-
 
 
 
 (define-public (unxswap 
-    (baseRequest {fromToken: <ft-trait>, toToken: <ft-trait>, fromTokenAmount: uint, minReturnAmount: uint}) 
-    (batches (list 10 {adapterImpl: <dispatcherInterface>, poolType: uint, swapFuncType: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint,factor: uint, dx: uint, minDy: (optional uint)}))
+    (baseRequest {fromToken: <ft-trait-arka>, toToken: <ft-trait-arka>, fromTokenAmount: uint, minReturnAmount: uint}) 
+    (batches (list 10 
+      {adapterImpl: <dispatcherInterface>, 
+      poolType: uint, 
+      swapFuncType: uint, 
+      fromToken: (optional <ft-trait-arka>), 
+      toToken: (optional <ft-trait-arka>), 
+      fromTokenAlex: (optional <ft-trait-alex>), 
+      toTokenAlex: (optional <ft-trait-alex>), 
+      weightX: uint, weightY: uint,factor: uint, dx: uint, minDy: (optional uint)}))
     )
 
     (let
@@ -63,18 +55,6 @@
 
 )
 
-;; (define-constant ETH_ADDR 'ST1HTBVD3JG9C05J7HBJTHGR0GGW7KXW28M5JS8QE)
-;; (define-private (balanceOf (token <ft-trait>) (user principal)) 
-;;     (let 
-;;         (
-;;           (tokenAddr (contract-of token))
-;;         )
-;;         (if (is-eq tokenAddr ETH_ADDR)
-;;             (stx-get-balance user)
-;;             (try! (contract-call? token get-balance user))
-;;         )
-;;     )
-;; )
 
 (define-private (checkMinReturn (balanceAfter uint) (balanceBefore uint) (minReturnAmount uint)) 
     (begin 
@@ -88,7 +68,15 @@
 
 
 (define-public (handleJump 
-    (batch {adapterImpl: <dispatcherInterface>, poolType: uint, swapFuncType: uint, fromToken: <ft-trait>, toToken: <ft-trait>, weightX: uint, weightY: uint,factor: uint, dx: uint, minDy: (optional uint)})
+    (batch 
+      {adapterImpl: <dispatcherInterface>, 
+      poolType: uint, 
+      swapFuncType: uint, 
+      fromToken: (optional <ft-trait-arka>), 
+      toToken: (optional <ft-trait-arka>), 
+      fromTokenAlex: (optional <ft-trait-alex>), 
+      toTokenAlex: (optional <ft-trait-alex>), 
+      weightX: uint, weightY: uint,factor: uint, dx: uint, minDy: (optional uint)})
     (priorRes (response uint uint))
 ) 
 (match priorRes
@@ -101,15 +89,23 @@
             (swapFuncType (get swapFuncType batchInfo))
             (fromToken (get fromToken batchInfo))
             (toToken (get toToken batchInfo))
+            (fromTokenAlex (get fromTokenAlex batchInfo))
+            (toTokenAlex (get toTokenAlex batchInfo))
             (weightX (get weightX batchInfo))
             (weightY (get weightY batchInfo))
             (factor (get factor batchInfo))
             (dx (get dx batchInfo))
             (minDy (get minDy batchInfo))
-
+            ;; (dy (if (and (is-some fromTokenAlex) (is-some toTokenAlex)) 
+            ;;     (get dy (try! (contract-call? adapterImpl swapAlex poolType swapFuncType fromTokenAlex toTokenAlex weightX weightY factor dx minDy)))
+            ;;     (if (and (is-some fromToken) (is-some toToken))
+            ;;       (get dy (try! (contract-call? adapterImpl swapArki poolType swapFuncType fromToken toToken weightX weightY factor dx minDy)))
+            ;;       u0
+            ;;     )
+            ;; )
             ;; 0xAAAA 0xBBBB.dispatcher
             (dy (get dy (try! (contract-call? adapterImpl swap
-                    poolType swapFuncType fromToken toToken weightX weightY factor dx minDy
+                    poolType swapFuncType fromToken toToken fromTokenAlex toTokenAlex weightX weightY factor dx minDy
                 ))))
         )
         (asserts! (>= dy (default-to u0 minDy)) ERR_RETURN_AMOUNT_IS_NOT_ENOUGH)
@@ -119,4 +115,3 @@
 )
  
 )
-
