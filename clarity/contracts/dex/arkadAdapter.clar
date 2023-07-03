@@ -4,7 +4,7 @@
 (use-trait ft-trait-alex .trait-sip-010.sip-010-trait)
 
 (define-constant SWAP_X_FOR_Y    u1000005)
-(define-constant SWAP_Y_FOR_X    u1000005)
+(define-constant SWAP_Y_FOR_X    u1000006)
 
 (define-constant ERR_FROM_TOKEN_NOT_MATCH (err u9001))
 (define-constant ERR_POOL_NOT_EXISTS (err u9002))
@@ -45,9 +45,9 @@
             (tokenYAddr (contract-of tokenY))
         )
         ;; check pool exists
-        (asserts! (is-ok (contract-call? 'SP2C2YFP12AJZB4MABJBAJ55XECVS7E4PMMZ89YZR.arkadiko-swap-v2-1 get-pair-details tokenXAddr tokenYAddr)) ERR_POOL_NOT_EXISTS)
+        (asserts! (is-ok (contract-call? .arkadiko-swap-v2-1 get-pair-details tokenXAddr tokenYAddr)) ERR_POOL_NOT_EXISTS)
         ;; contract call do the real swap
-        (contract-call? 'SP2C2YFP12AJZB4MABJBAJ55XECVS7E4PMMZ89YZR.arkadiko-swap-v2-1 swap-x-for-y tokenX tokenY dx minDy)
+        (contract-call? .arkadiko-swap-v2-1 swap-x-for-y tokenX tokenY dx minDy)
     )
 )
 
@@ -60,8 +60,8 @@
             (tokenYAddr (contract-of tokenY))
         )
         ;; check pool exists
-        (asserts! (is-ok (contract-call? 'SP2C2YFP12AJZB4MABJBAJ55XECVS7E4PMMZ89YZR.arkadiko-swap-v2-1 get-pair-details tokenXAddr tokenYAddr)) ERR_POOL_NOT_EXISTS)
+        (asserts! (is-ok (contract-call? .arkadiko-swap-v2-1 get-pair-details tokenXAddr tokenYAddr)) ERR_POOL_NOT_EXISTS)
         ;; contract call do the real swap
-        (contract-call? 'SP2C2YFP12AJZB4MABJBAJ55XECVS7E4PMMZ89YZR.arkadiko-swap-v2-1 swap-y-for-x tokenX tokenY dx minDy)
+        (contract-call? .arkadiko-swap-v2-1 swap-y-for-x tokenX tokenY dx minDy)
     )
 )

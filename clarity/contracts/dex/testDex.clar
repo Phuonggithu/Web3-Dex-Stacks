@@ -60,9 +60,16 @@
         (try! (contract-call? .simple-weight-pool-alex set-start-block .age000-governance-token .token-xbtc u0))
         ;; (try! (contract-call? .swap-helper-v1-01 swap-helper .token-usda .token-xbtc ONE_8 none))
         ;; (try! (contract-call? .swap-helper-v1-01 swap-helper .token-usda .token-wstx ONE_8 none))
+        (try! (setUp2))
+        (ok true)
+    )
+)
+(define-public (setUp2) 
+    (begin
+        (try! (contract-call? .usda-token mint-for-dao u10000 deployer))
+        (try! (contract-call? .wrapped-stx-token mint-for-dao u10000 deployer))
 
-        
-
+        (try! (contract-call? .arkadiko-swap-v2-1 create-pair .wrapped-stx-token .usda-token .arkadiko-swap-token-wstx-usda "" u1000 u3000))
         (ok true)
     )
 )
@@ -78,7 +85,7 @@
 (define-constant FIXED_WEIGHT u2000001)
 (define-constant STABLE_POOL u2000002)
 
-(define-public (test_swapJump0) 
+(define-public (test_swapAlex0) 
     (let
         (
             (weightUSDA u50000000)
@@ -89,6 +96,7 @@
         (try! (contract-call? .aggregator unxswap 
             {fromToken: .token-usda, 
             toToken: .token-wstx, 
+            isNative: false,
             fromTokenAmount: amount, 
             minReturnAmount: u0}
             (list 
@@ -103,133 +111,131 @@
                 weightY: weightWSTX, 
                 factor: u0,
                 dx: amount, 
-                minDy: none}
+                minDy: none,
+                rate: u1,
+                isMul: true}
             )
         ))
         (ok true)
     )
 )
 
-;; (define-public (test_swapJump1) 
-;;     (let
-;;         (
-;;             (weight u50000000)
-;;             (amount u1000000000)
-;;         ) 
-;;         ;; swap usda for wstx through fixed weight pool
-;;         (try! (contract-call? .aggregator unxswap 
-;;             {fromToken: .token-usda, 
-;;             toToken: .token-xbtc, 
-;;             fromTokenAmount: amount, 
-;;             minReturnAmount: u0}
-;;             (list 
-;;                 {adapterImpl: .alexAdapter, 
-;;                 poolType: FIXED_WEIGHT, 
-;;                 swapFuncType: SWAP_Y_FOR_WSTX, 
-;;                 fromToken: .token-usda, 
-;;                 toToken: .token-wstx, 
-;;                 weightX: weight, 
-;;                 weightY: weight, 
-;;                 factor: u0,
-;;                 dx: amount, 
-;;                 minDy: none}
-;;                 {adapterImpl: .alexAdapter, 
-;;                 poolType: FIXED_WEIGHT, 
-;;                 swapFuncType: SWAP_WSTX_FOR_Y, 
-;;                 fromToken: .token-wstx, 
-;;                 toToken: .token-xbtc, 
-;;                 weightX: weight, 
-;;                 weightY: weight, 
-;;                 factor: u0,
-;;                 dx: amount, 
-;;                 minDy: none}
-;;             )
-;;         ))
-;;         (ok true)
-;;     )
-;; )
-;; (contract-call? .testDex setUp)
-;; ::trace (contract-call? .testDex test_swapJump1)
-;; (contract-call? .testDex test_swapJump0Direct)
-;; ::get_assets_maps
+(define-public (test_swapAlex1) 
+    (let
+        (
+            (weight u50000000)
+            (amount u1000000000)
+        ) 
+        ;; swap usda for wstx through fixed weight pool
+        (try! (contract-call? .aggregator unxswap 
+            {fromToken: .token-usda, 
+            toToken: .token-xbtc, 
+            isNative: false,
+            fromTokenAmount: amount, 
+            minReturnAmount: u0}
+            (list 
+                {adapterImpl: .alexAdapter, 
+                poolType: FIXED_WEIGHT, 
+                swapFuncType: SWAP_Y_FOR_WSTX, 
+                fromToken: none, 
+                toToken: none, 
+                fromTokenAlex:(some .token-usda), 
+                toTokenAlex: (some .token-wstx), 
+                weightX: weight, 
+                weightY: weight, 
+                factor: u0,
+                dx: amount, 
+                minDy: none,
+                rate: u1,
+                isMul: true}
+                {adapterImpl: .alexAdapter, 
+                poolType: FIXED_WEIGHT, 
+                swapFuncType: SWAP_WSTX_FOR_Y, 
+                fromToken: none, 
+                toToken: none, 
+                fromTokenAlex:(some .token-wstx), 
+                toTokenAlex: (some .token-xbtc), 
+                weightX: weight, 
+                weightY: weight, 
+                factor: u0,
+                dx: amount, 
+                minDy: none,
+                rate: u1,
+                isMul: true}
+            )
+        ))
+        (ok true)
+    )
+)
 
-;; (contract-call? .testDex setUp)
-;; ::trace (contract-call? .testDex test_1)
-;; ::trace (contract-call? .testDex test_swapJump0)
-;; (contract-call? .testDex test_swapJump0Direct)
-;; ::get_assets_maps
-;; (define-public (test_1) 
-;;     (let
-;;         (
-;;             (weightUSDA u50000000)
-;;             (weightWSTX u50000000)
-;;             (amount u10000000)
-;;         ) 
-;;         ;; swap usda for wstx through fixed weight pool
-;;         (try! (contract-call? .aggregator handleJump0 
-;;             (some
-;;                 {dexType: DEX_TYPE_ALEX, 
-;;                 poolType: FIXED_WEIGHT, 
-;;                 swapFuncType: SWAP_Y_FOR_WSTX, 
-;;                 fromToken: .token-usda, 
-;;                 toToken: .token-wstx, 
-;;                 weightX: weightUSDA, 
-;;                 weightY: weightWSTX, 
-;;                 dx: amount, 
-;;                 minDy: none}
-;;             )
-;;             amount
-;;         ))
-;;         (ok true)
-;;     )
-;; )
+(define-constant SWAP_X_FOR_Y    u1000005)
+(define-constant SWAP_Y_FOR_X    u1000006)
 
-;; (define-public (test_2) 
-;;     (let
-;;         (
-;;             (weightUSDA u50000000)
-;;             (weightWSTX u50000000)
-;;             (amount u10000000)
-;;         ) 
-;;         ;; swap usda for wstx through fixed weight pool
-;;         (try! (contract-call? .aggregator easySwap 
-;;             (list
-;;                 {dexType: DEX_TYPE_ALEX, 
-;;                 poolType: FIXED_WEIGHT, 
-;;                 swapFuncType: SWAP_Y_FOR_WSTX, 
-;;                 fromToken: .token-usda, 
-;;                 toToken: .token-wstx, 
-;;                 weightX: weightUSDA, 
-;;                 weightY: weightWSTX, 
-;;                 dx: amount, 
-;;                 minDy: none}
-;;             )
-;;         ))
-;;         (ok true)
-;;     )
-;; )
+(define-public (test_swapArkadiko) 
+    (let
+        (
+            (weight u0)
+            (amount u1000)
+        ) 
+        ;; swap usda for wstx through fixed weight pool
+        (try! (contract-call? .aggregator unxswap 
+            {fromToken: .usda-token, 
+            toToken: .wrapped-stx-token, 
+            isNative: true,
+            fromTokenAmount: amount, 
+            minReturnAmount: u249}
+            (list 
+                {adapterImpl: .arkadAdapter, 
+                poolType: FIXED_WEIGHT, 
+                swapFuncType: SWAP_Y_FOR_X, 
+                fromToken: (some .usda-token), 
+                toToken: (some .wrapped-stx-token), 
+                fromTokenAlex:none, 
+                toTokenAlex: none, 
+                weightX: u0, 
+                weightY: u0, 
+                factor: u0,
+                dx: amount, 
+                minDy: none,
+                rate: u1,
+                isMul: true}
+            )
+        ))
+        (ok true)
+    )
+)
 
-;; (define-public (test_3) 
-;;     (let
-;;         (
-;;             (weightUSDA u50000000)
-;;             (weightWSTX u50000000)
-;;             (amount u10000000)
-;;         ) 
-;;         ;; swap usda for wstx through fixed weight pool
-;;         (try! (contract-call? .aggregator easySwap2 
-;;             (some
-;;                 {dexType: DEX_TYPE_ALEX, 
-;;                 poolType: FIXED_WEIGHT, 
-;;                 swapFuncType: SWAP_Y_FOR_WSTX, 
-;;                 fromToken: .token-usda, 
-;;                 toToken: .token-wstx, 
-;;                 weightX: weightUSDA, 
-;;                 weightY: weightWSTX, 
-;;                 dx: amount, 
-;;                 minDy: none}
-;;             )
-;;         ))
-;;         (ok true)
-;;     )
-;; )
+(define-public (test_swapArkadiko1) 
+    (let
+        (
+            (weight u0)
+            (amount u1000)
+        ) 
+        ;; swap usda for wstx through fixed weight pool
+        (try! (contract-call? .aggregator unxswap 
+            {
+            fromToken: .wrapped-stx-token, 
+            toToken: .usda-token, 
+            isNative: false,
+            fromTokenAmount: amount, 
+            minReturnAmount: u0}
+            (list 
+                {adapterImpl: .arkadAdapter, 
+                poolType: FIXED_WEIGHT, 
+                swapFuncType: SWAP_X_FOR_Y, 
+                fromToken: (some .wrapped-stx-token), 
+                toToken: (some .usda-token), 
+                fromTokenAlex:none, 
+                toTokenAlex: none, 
+                weightX: u0, 
+                weightY: u0, 
+                factor: u0,
+                dx: amount, 
+                minDy: none,
+                rate: u1,
+                isMul: true}
+            )
+        ))
+        (ok true)
+    )
+)

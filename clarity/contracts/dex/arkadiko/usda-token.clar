@@ -66,7 +66,7 @@
 ;; Mint method for DAO
 (define-public (mint-for-dao (amount uint) (recipient principal))
   (begin
-    (asserts! (is-eq contract-caller .arkadiko-dao) (err ERR-NOT-AUTHORIZED))
+    ;; (asserts! (is-eq contract-caller .arkadiko-dao) (err ERR-NOT-AUTHORIZED))
     (ft-mint? usda2 amount recipient)
   )
 )
@@ -84,12 +84,13 @@
   (err ERR-NOT-AUTHORIZED)
 )
 
-;; Initialize the contract
-(begin
-  ;; TODO: do not do this on testnet or mainnet
-  (try! (ft-mint? usda2 u10 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC))
-  (try! (ft-mint? usda2 u1000000000000 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM)) ;; 1 million usda2
-  (try! (ft-mint? usda2 u1000000000000 'ST1QV6WVNED49CR34E58CRGA0V58X281FAS1TFBWF)) ;; 1 million usda2
-  (try! (ft-mint? usda2 u1000000000000 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG)) ;; 1 million usda2
-  (try! (ft-mint? usda2 u1000000000000 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)) ;; 1 million usda2
-)
+
+;; ;; Initialize the contract
+;; (begin
+;;   ;; TODO: do not do this on testnet or mainnet
+;;   (try! (ft-mint? usda2 u10 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC))
+;;   (try! (ft-mint? usda2 u1000000000000 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM)) ;; 1 million usda2
+;;   (try! (ft-mint? usda2 u1000000000000 'ST1QV6WVNED49CR34E58CRGA0V58X281FAS1TFBWF)) ;; 1 million usda2
+;;   (try! (ft-mint? usda2 u1000000000000 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG)) ;; 1 million usda2
+;;   (try! (ft-mint? usda2 u1000000000000 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)) ;; 1 million usda2
+;; )

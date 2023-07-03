@@ -70,10 +70,12 @@
 (define-data-var pair-count uint u0)
 
 (define-read-only (shutdown-not-activated)
-  (and
-     (not (unwrap-panic (contract-call? .arkadiko-dao get-emergency-shutdown-activated)))
-     (not (var-get swap-shutdown-activated))
-  )
+  ;; (and
+  ;;   ;;  (not (unwrap-panic (contract-call? .arkadiko-dao get-emergency-shutdown-activated)))
+  ;;    false
+  ;;    (not (var-get swap-shutdown-activated))
+  ;; )
+  true
 )
 
 (define-read-only (get-name (token-x-trait <ft-trait>) (token-y-trait <ft-trait>))
@@ -334,8 +336,8 @@
 )
   (let
     (
-      (name-x (unwrap-panic (contract-call? token-x-trait get-name)))
-      (name-y (unwrap-panic (contract-call? token-y-trait get-name)))
+      ;; (name-x (unwrap-panic (contract-call? token-x-trait get-name)))
+      ;; (name-y (unwrap-panic (contract-call? token-y-trait get-name)))
       (token-x (contract-of token-x-trait))
       (token-y (contract-of token-y-trait))
       (pair-id (+ (var-get pair-count) u1))
@@ -351,7 +353,7 @@
         name: pair-name,
       })
     )
-    (asserts! (is-eq contract-caller (contract-call? .arkadiko-dao get-dao-owner)) (err ERR-NOT-AUTHORIZED))
+    ;; (asserts! (is-eq contract-caller (contract-call? .arkadiko-dao get-dao-owner)) (err ERR-NOT-AUTHORIZED))
     (asserts!
       (and
         (is-none (map-get? pairs-data-map { token-x: token-x, token-y: token-y }))

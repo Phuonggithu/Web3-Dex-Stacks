@@ -21,7 +21,7 @@
 
 
 (define-public (unxswap 
-    (baseRequest {fromToken: <ft-trait-arka>, toToken: <ft-trait-arka>, fromTokenAmount: uint, minReturnAmount: uint}) 
+    (baseRequest {fromToken: <ft-trait-arka>, toToken: <ft-trait-arka>, isNative: bool,fromTokenAmount: uint, minReturnAmount: uint}) 
     (batches (list 10 
       {adapterImpl: <dispatcherInterface>, 
       poolType: uint, 
@@ -30,29 +30,41 @@
       toToken: (optional <ft-trait-arka>), 
       fromTokenAlex: (optional <ft-trait-alex>), 
       toTokenAlex: (optional <ft-trait-alex>), 
-      weightX: uint, weightY: uint,factor: uint, dx: uint, minDy: (optional uint)}))
+      weightX: uint, weightY: uint,factor: uint, dx: uint, minDy: (optional uint), rate: uint, isMul: bool}))
     )
 
     (let
       (
+          (sender tx-sender)
+          (isNative (get isNative baseRequest))
           (batchLen (len batches))
           (toToken (get toToken baseRequest))
           (fromTokenAmount (get fromTokenAmount baseRequest))
           (minReturnAmount (get minReturnAmount baseRequest))
           (fromToken (get fromToken baseRequest))
-          (sender tx-sender)
-          (balanceBefore (try! (contract-call? toToken get-balance sender)))
+          
+          (balanceBefore (getBalance toToken isNative sender))
           
           (dy (try! (fold handleJump batches (ok fromTokenAmount))))
       )
 
       ;; emit event: OrderRecord
-      (print {orderRecord: {fromToken: fromToken, toToken: toToken, sender: sender, fromAmount: fromTokenAmount, returnAmount:  dy}})
+      (print {orderRecord: {fromToken: fromToken, toToken: toToken, isNative: isNative, sender: sender, fromAmount: fromTokenAmount, returnAmount:  dy}})
       ;; return amount delta
-      (checkMinReturn (try! (contract-call? toToken get-balance sender)) balanceBefore minReturnAmount)
+      (checkMinReturn (getBalance toToken isNative sender) balanceBefore minReturnAmount)
     )
 
 
+)
+
+(define-private (getBalance (toToken <ft-trait-arka>) (isNative bool) (sender principal)) 
+    (if isNative 
+        (stx-get-balance sender)
+        (match (contract-call? toToken get-balance sender) 
+            amount amount
+            err u0
+        )
+    )
 )
 
 
@@ -76,7 +88,15 @@
       toToken: (optional <ft-trait-arka>), 
       fromTokenAlex: (optional <ft-trait-alex>), 
       toTokenAlex: (optional <ft-trait-alex>), 
-      weightX: uint, weightY: uint,factor: uint, dx: uint, minDy: (optional uint)})
+      weightX: uint, 
+      weightY: uint,
+      factor: uint, 
+      dx: uint, 
+      minDy: (optional uint),
+      rate: uint,
+      isMul: bool}
+
+    )
     (priorRes (response uint uint))
 ) 
 (match priorRes

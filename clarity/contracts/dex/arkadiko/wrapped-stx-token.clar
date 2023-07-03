@@ -66,7 +66,7 @@
 ;; Mint method for DAO
 (define-public (mint-for-dao (amount uint) (recipient principal))
   (begin
-    (asserts! (is-eq contract-caller .arkadiko-dao) (err ERR-NOT-AUTHORIZED))
+    ;; (asserts! (is-eq contract-caller .arkadiko-dao) (err ERR-NOT-AUTHORIZED))
     (ft-mint? wstx amount recipient)
   )
 )
