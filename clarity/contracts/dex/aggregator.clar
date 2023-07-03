@@ -118,13 +118,6 @@
             (minDy (get minDy batchInfo))
             (rate (get rate batchInfo))
             (isMul (get isMul batchInfo))
-            ;; (dy (if (and (is-some fromTokenAlex) (is-some toTokenAlex)) 
-            ;;     (get dy (try! (contract-call? adapterImpl swapAlex poolType swapFuncType fromTokenAlex toTokenAlex weightX weightY factor dx minDy)))
-            ;;     (if (and (is-some fromToken) (is-some toToken))
-            ;;       (get dy (try! (contract-call? adapterImpl swapArki poolType swapFuncType fromToken toToken weightX weightY factor dx minDy)))
-            ;;       u0
-            ;;     )
-            ;; )
             ;; 0xAAAA 0xBBBB.dispatcher
             (dy (get dy (try! (contract-call? adapterImpl swap
                         poolType swapFuncType fromToken toToken fromTokenAlex toTokenAlex weightX weightY factor dx minDy
