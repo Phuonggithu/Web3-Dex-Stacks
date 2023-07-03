@@ -239,3 +239,51 @@
         (ok true)
     )
 )
+
+(define-public (test_rate) 
+    (let
+        (
+            (weight u50000000)
+            (amount u1000)
+        ) 
+        ;; swap usda for wstx through fixed weight pool
+        (try! (contract-call? .aggregator unxswap 
+            {fromToken: .usda-token, 
+            toToken: .token-usda, 
+            isNative: false,
+            fromTokenAmount: amount, 
+            minReturnAmount: u0}
+            (list 
+                {adapterImpl: .arkadAdapter, 
+                poolType: FIXED_WEIGHT, 
+                swapFuncType: SWAP_Y_FOR_X, 
+                fromToken: (some .usda-token), 
+                toToken: (some .wrapped-stx-token), 
+                fromTokenAlex:none, 
+                toTokenAlex: none, 
+                weightX: u0, 
+                weightY: u0, 
+                factor: u0,
+                dx: amount, 
+                minDy: none,
+                rate: ONE_8,
+                isMul: true}
+                {adapterImpl: .alexAdapter, 
+                poolType: FIXED_WEIGHT, 
+                swapFuncType: SWAP_WSTX_FOR_Y, 
+                fromToken: none, 
+                toToken: none, 
+                fromTokenAlex:(some .token-wstx), 
+                toTokenAlex: (some .token-usda), 
+                weightX: weight, 
+                weightY: weight, 
+                factor: u0,
+                dx: amount, 
+                minDy: none,
+                rate: u1,
+                isMul: true}
+            )
+        ))
+        (ok true)
+    )
+)
