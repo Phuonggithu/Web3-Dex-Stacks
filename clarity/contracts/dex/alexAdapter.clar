@@ -9,8 +9,8 @@
 (define-constant ERR_TO_TOKEN_NOT_MATCH (err u9003))
 (define-constant ERR_WEIGHT_SUM (err u9004))
 
-(define-constant ERR_WRONG_FROM_TOKEN (err u9005))
-(define-constant ERR_WRONG_TO_TOKEN (err u9006))
+(define-constant ERR_WRONG_FROM_TOKEN (err u9006))
+(define-constant ERR_WRONG_TO_TOKEN (err u9007))
 
 (define-constant ONE_8 u100000000) ;; 8 decimal places
 
@@ -22,7 +22,7 @@
 (define-constant SWAP_WSTX_FOR_Y u1000003)
 (define-constant SWAP_Y_FOR_WSTX u1000004)
 (define-constant SWAP_X_FOR_Y    u1000005)
-(define-constant SWAP_Y_FOR_X    u1000005)
+(define-constant SWAP_Y_FOR_X    u1000006)
 
 (define-constant FIXED_WEIGHT u2000001)
 (define-constant STABLE_POOL u2000002)

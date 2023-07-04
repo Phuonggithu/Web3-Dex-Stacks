@@ -14,8 +14,8 @@
 
 
 
-(define-constant ERR_WRONG_FROM_TOKEN (err u9005))
-(define-constant ERR_WRONG_TO_TOKEN (err u9006))
+(define-constant ERR_WRONG_FROM_TOKEN (err u9006))
+(define-constant ERR_WRONG_TO_TOKEN (err u9007))
 
 (define-public (swap (poolId uint) (swapFuncId uint) (fromTokenNormal (optional <ft-trait>)) (toTokenNormal (optional <ft-trait>)) (fromTokenAlex (optional <ft-trait-alex>)) (toTokenAlex (optional <ft-trait-alex>)) (weightX uint) (weightY uint) (factor uint) (dx uint) (minDy (optional uint))) 
     (let 
