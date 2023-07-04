@@ -21,6 +21,7 @@
 (define-constant SWAP_Y_FOR_ALEX u1000002)
 (define-constant SWAP_WSTX_FOR_Y u1000003)
 (define-constant SWAP_Y_FOR_WSTX u1000004)
+
 (define-constant SWAP_X_FOR_Y    u1000005)
 (define-constant SWAP_Y_FOR_X    u1000006)
 
