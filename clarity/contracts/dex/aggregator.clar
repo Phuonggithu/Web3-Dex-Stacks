@@ -2,6 +2,7 @@
 
 (use-trait ft-trait-arka .sip-010-trait-ft-standard.sip-010-trait)
 (use-trait ft-trait-alex .trait-sip-010.sip-010-trait)
+(use-trait liquidity-token .liquidity-token-trait-v4c.liquidity-token-trait)
 
 (use-trait dispatcherInterface .dispatcherTrait.DispatcherInterface)
 
@@ -30,6 +31,7 @@
       toToken: (optional <ft-trait-arka>), 
       fromTokenAlex: (optional <ft-trait-alex>), 
       toTokenAlex: (optional <ft-trait-alex>), 
+      lpToken: (optional <liquidity-token>),
       weightX: uint, weightY: uint,factor: uint, dx: uint, minDy: (optional uint), rate: uint, isMul: bool}))
     )
 
@@ -88,6 +90,7 @@
       toToken: (optional <ft-trait-arka>), 
       fromTokenAlex: (optional <ft-trait-alex>), 
       toTokenAlex: (optional <ft-trait-alex>), 
+      lpToken: (optional <liquidity-token>),
       weightX: uint, 
       weightY: uint,
       factor: uint, 
@@ -111,6 +114,7 @@
             (toToken (get toToken batchInfo))
             (fromTokenAlex (get fromTokenAlex batchInfo))
             (toTokenAlex (get toTokenAlex batchInfo))
+            (lpToken (get lpToken batchInfo))
             (weightX (get weightX batchInfo))
             (weightY (get weightY batchInfo))
             (factor (get factor batchInfo))
@@ -120,7 +124,7 @@
             (isMul (get isMul batchInfo))
             ;; 0xAAAA 0xBBBB.dispatcher
             (dy (get dy (try! (contract-call? adapterImpl swap
-                        poolType swapFuncType fromToken toToken fromTokenAlex toTokenAlex weightX weightY factor dx minDy
+                        poolType swapFuncType fromToken toToken fromTokenAlex toTokenAlex lpToken weightX weightY factor dx minDy
                     ))) )
         )
         (asserts! (>= dy (default-to u0 minDy)) ERR_RETURN_AMOUNT_IS_NOT_ENOUGH)

@@ -1185,3 +1185,49 @@ epoch = 2.1
 path = 'contracts/dex/arkadiko/wrapped-stx-token.clar'
 clarity_version = 2
 epoch = 2.1
+
+
+[contracts.sip-010-v1a]
+path = 'contracts/dex/stacksswap/sip-010-v1a.clar'
+clarity_version = 2
+epoch = 2.1
+
+[contracts.liquidity-token-trait-v4c]
+path = 'contracts/dex/stacksswap/liquidity-token-trait-v4c.clar'
+clarity_version = 2
+epoch = 2.1
+
+[contracts.initializable-trait-v1b]
+path = 'contracts/dex/stacksswap/initializable-trait-v1b.clar'
+clarity_version = 2
+epoch = 2.1
+
+[contracts.stackswap-swap-trait-v1c]
+path = 'contracts/dex/stacksswap/stackswap-swap-trait-v1c.clar'
+clarity_version = 2
+epoch = 2.1
+
+[contracts.stackswap-security-list-v1a]
+path = 'contracts/dex/stacksswap/stackswap-security-list-v1a.clar'
+clarity_version = 2
+epoch = 2.1
+
+[contracts.stackswap-swap-v5k]
+path = 'contracts/dex/stacksswap/stackswap-swap-v5k.clar'
+clarity_version = 2
+epoch = 2.1
+
+[contracts.liquidity-token-v5k0yl5ot8l]
+path = 'contracts/dex/stacksswap/liquidity-token-v5k0yl5ot8l.clar'
+clarity_version = 2
+epoch = 2.1
+
+[contracts.wstx-token-v4a]
+path = 'contracts/dex/stacksswap/wstx-token-v4a.clar'
+clarity_version = 2
+epoch = 2.1
+
+[contracts.stackswapAdapter]
+path = 'contracts/dex/stackswapAdapter.clar'
+clarity_version = 2
+epoch = 2.1

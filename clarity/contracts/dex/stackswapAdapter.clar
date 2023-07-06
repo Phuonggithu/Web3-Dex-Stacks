@@ -33,15 +33,16 @@
 (define-constant TRADING_POOL u2000003)
 (define-constant SIMPLE_WEIGHT u2000004)
 
-(define-public (swap (poolId uint) (swapFuncId uint) (fromTokenNormal (optional <ft-trait>)) (toTokenNormal (optional <ft-trait>)) (fromTokenAlex (optional <ft-trait-alex>)) (toTokenAlex (optional <ft-trait-alex>)) (lpToken (optional <liquidity-token>)) (weightX uint) (weightY uint) (factor uint) (dx uint) (minDy (optional uint))) 
+(define-public (swap (poolId uint) (swapFuncId uint) (fromTokenNormal (optional <ft-trait>)) (toTokenNormal (optional <ft-trait>)) (fromTokenAlex (optional <ft-trait-alex>)) (toTokenAlex (optional <ft-trait-alex>)) (lpTokenAddr (optional <liquidity-token>)) (weightX uint) (weightY uint) (factor uint) (dx uint) (minDy (optional uint))) 
     (let 
         (
             (fromToken (unwrap! fromTokenNormal ERR_WRONG_FROM_TOKEN))
             (toToken (unwrap! toTokenNormal ERR_WRONG_TO_TOKEN))
+            (lpToken (unwrap! lpTokenAddr ERR_WRONG_LP_TOKEN ))
             (dy (if (is-eq SWAP_X_FOR_Y swapFuncId)
-                (element-at (try! (handleSwapXForY fromToken toToken dx (default-to u0 minDy))) u1) ;;dy
+                (element-at (try! (handleSwapXForY fromToken toToken lpToken dx (default-to u0 minDy))) u1) ;;dy
                 (if (is-eq SWAP_Y_FOR_X swapFuncId)
-                    (element-at (try! (handleSwapYForX fromToken toToken dx (default-to u0 minDy))) u0) ;;dx
+                    (element-at (try! (handleSwapYForX fromToken toToken lpToken dx (default-to u0 minDy))) u0) ;;dx
                     none
                 )
             ))
@@ -51,8 +52,7 @@
     )
 )
 
-
-(define-private (handleSwapXForY (fromToken <ft-trait>) (toToken <ft-trait>) (dx uint) (minDy uint))
+(define-private (handleSwapXForY (fromToken <ft-trait>) (toToken <ft-trait>) (lpToken <liquidity-token>) (dx uint) (minDy uint))
     (let
         (
             (tokenX fromToken)
@@ -61,13 +61,13 @@
             (tokenYAddr (contract-of tokenY))
         )
         ;; check pool exists
-        (asserts! (is-ok (contract-call? .arkadiko-swap-v2-1 get-pair-details tokenXAddr tokenYAddr)) ERR_POOL_NOT_EXISTS)
+        (contract-call? .stackswap-swap-v5k get-pair-details tokenXAddr tokenYAddr)
         ;; contract call do the real swap
-        (contract-call? .arkadiko-swap-v2-1 swap-x-for-y tokenX tokenY dx minDy)
+        (contract-call? .stackswap-swap-v5k swap-x-for-y tokenX tokenY lpToken dx minDy)
     )
 )
 
-(define-private (handleSwapYForX (fromToken <ft-trait>) (toToken <ft-trait>) (dx uint) (minDy uint))
+(define-private (handleSwapYForX (fromToken <ft-trait>) (toToken <ft-trait>) (lpToken <liquidity-token>) (dx uint) (minDy uint))
     (let
         (
             (tokenX toToken)
@@ -76,8 +76,8 @@
             (tokenYAddr (contract-of tokenY))
         )
         ;; check pool exists
-        (asserts! (is-ok (contract-call? .arkadiko-swap-v2-1 get-pair-details tokenXAddr tokenYAddr)) ERR_POOL_NOT_EXISTS)
+        (contract-call? .stackswap-swap-v5k get-pair-details tokenXAddr tokenYAddr)
         ;; contract call do the real swap
-        (contract-call? .arkadiko-swap-v2-1 swap-y-for-x tokenX tokenY dx minDy)
+        (contract-call? .stackswap-swap-v5k swap-y-for-x tokenX tokenY lpToken dx minDy)
     )
 )

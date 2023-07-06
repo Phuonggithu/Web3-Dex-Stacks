@@ -3,14 +3,17 @@
 
 (use-trait ft-trait .sip-010-trait-ft-standard.sip-010-trait)
 (use-trait ft-trait-alex .trait-sip-010.sip-010-trait)
+(use-trait liquidity-token .liquidity-token-trait-v4c.liquidity-token-trait)
+
 
 (define-constant ERR_FROM_TOKEN_NOT_MATCH (err u9001))
 (define-constant ERR_POOL_NOT_EXISTS (err u9002))
 (define-constant ERR_TO_TOKEN_NOT_MATCH (err u9003))
 (define-constant ERR_WEIGHT_SUM (err u9004))
-
+(define-constant ERR_SWAP_FAILED (err u9005))
 (define-constant ERR_WRONG_FROM_TOKEN (err u9006))
 (define-constant ERR_WRONG_TO_TOKEN (err u9007))
+(define-constant ERR_WRONG_LP_TOKEN (err u9008))
 
 (define-constant ONE_8 u100000000) ;; 8 decimal places
 
@@ -30,7 +33,7 @@
 (define-constant TRADING_POOL u2000003)
 (define-constant SIMPLE_WEIGHT u2000004)
 
-(define-public (swap (poolId uint) (swapFuncId uint) (fromTokenNormal (optional <ft-trait>)) (toTokenNormal (optional <ft-trait>)) (fromTokenAlex (optional <ft-trait-alex>)) (toTokenAlex (optional <ft-trait-alex>)) (weightX uint) (weightY uint) (factor uint) (dx uint) (minDy (optional uint))) 
+(define-public (swap (poolId uint) (swapFuncId uint) (fromTokenNormal (optional <ft-trait>)) (toTokenNormal (optional <ft-trait>)) (fromTokenAlex (optional <ft-trait-alex>)) (toTokenAlex (optional <ft-trait-alex>)) (lpToken (optional <liquidity-token>)) (weightX uint) (weightY uint) (factor uint) (dx uint) (minDy (optional uint))) 
     (let 
         (
             (fromToken (unwrap! fromTokenAlex ERR_WRONG_FROM_TOKEN))

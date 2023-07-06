@@ -75,6 +75,7 @@
         ;; (try! (contract-call? .swap-helper-v1-01 swap-helper .token-usda .token-xbtc ONE_8 none))
         ;; (try! (contract-call? .swap-helper-v1-01 swap-helper .token-usda .token-wstx ONE_8 none))
         (try! (setUp2))
+        (try! (setUp3))
         (ok true)
     )
 )
@@ -84,6 +85,17 @@
         (try! (contract-call? .wrapped-stx-token mint-for-dao u10000 deployer))
 
         (try! (contract-call? .arkadiko-swap-v2-1 create-pair .wrapped-stx-token .token-usda .arkadiko-swap-token-wstx-usda "" u1000 u3000))
+        (ok true)
+    )
+)
+
+(define-public (setUp3) 
+    (begin 
+        (try! (contract-call? .token-usda mint-fixed (* u100000000 ONE_8) deployer))
+        (try! (contract-call? .wrapped-stx-token mint-for-dao u10000 deployer))
+        (try! (contract-call? .liquidity-token-v5k0yl5ot8l initialize "lp" "lp" u6 u"lp"))
+        (try! (contract-call? .stackswap-swap-v5k create-pair .wrapped-stx-token .token-usda .liquidity-token-v5k0yl5ot8l "wstx-usda" u10000 u10000))
+        (unwrap-panic (contract-call? .stackswap-security-list-v1a add-router .stackswapAdapter))
         (ok true)
     )
 )
@@ -124,6 +136,7 @@
                 toToken: none, 
                 fromTokenAlex:(some .token-usda), 
                 toTokenAlex: (some .token-wstx), 
+                lpToken: none,
                 weightX: weightUSDA, 
                 weightY: weightWSTX, 
                 factor: u0,
@@ -158,6 +171,7 @@
                 toToken: none, 
                 fromTokenAlex:(some .token-usda), 
                 toTokenAlex: (some .token-wstx), 
+                lpToken: none,
                 weightX: weight, 
                 weightY: weight, 
                 factor: u0,
@@ -172,6 +186,7 @@
                 toToken: none, 
                 fromTokenAlex:(some .token-wstx), 
                 toTokenAlex: (some .token-xbtc), 
+                lpToken: none,
                 weightX: weight, 
                 weightY: weight, 
                 factor: u0,
@@ -205,6 +220,7 @@
                 toToken: none, 
                 fromTokenAlex:(some .token-wstx), 
                 toTokenAlex: (some .token-xbtc), 
+                lpToken: none,
                 weightX: u0, 
                 weightY: u0, 
                 factor: ONE_8,
@@ -238,6 +254,7 @@
                 toToken: none, 
                 fromTokenAlex:(some .token-xbtc), 
                 toTokenAlex: (some .token-wstx), 
+                lpToken: none,
                 weightX: u0, 
                 weightY: u0, 
                 factor: ONE_8,
@@ -271,6 +288,7 @@
                 toToken: none, 
                 fromTokenAlex:(some .age000-governance-token), 
                 toTokenAlex: (some .token-wusda), 
+                lpToken: none,
                 weightX: u0, 
                 weightY: u0, 
                 factor: u0,
@@ -304,6 +322,7 @@
                 toToken: none, 
                 fromTokenAlex:(some .token-wusda), 
                 toTokenAlex: (some .age000-governance-token), 
+                lpToken: none,
                 weightX: u0, 
                 weightY: u0, 
                 factor: u0,
@@ -339,6 +358,7 @@
                 toToken: (some .wrapped-stx-token), 
                 fromTokenAlex:none, 
                 toTokenAlex: none, 
+                lpToken: none,
                 weightX: u0, 
                 weightY: u0, 
                 factor: u0,
@@ -374,6 +394,7 @@
                 toToken: (some .token-usda), 
                 fromTokenAlex:none, 
                 toTokenAlex: none, 
+                lpToken: none,
                 weightX: u0, 
                 weightY: u0, 
                 factor: u0,
@@ -408,6 +429,7 @@
                 toToken: (some .wrapped-stx-token), 
                 fromTokenAlex:none, 
                 toTokenAlex: none, 
+                lpToken: none,
                 weightX: u0, 
                 weightY: u0, 
                 factor: u0,
@@ -422,6 +444,7 @@
                 toToken: none, 
                 fromTokenAlex:(some .token-wstx), 
                 toTokenAlex: (some .token-usda), 
+                lpToken: none,
                 weightX: weight, 
                 weightY: weight, 
                 factor: u0,
@@ -433,4 +456,77 @@
         ))
         (ok true)
     )
+)
+(define-public (test_stackswap) 
+    (let
+        (
+            (weight u0)
+            (amount u1000)
+        ) 
+        ;; swap usda for wstx through fixed weight pool
+        (try! (contract-call? .aggregator unxswap 
+            {
+            fromToken: .wrapped-stx-token, 
+            toToken: .token-usda, 
+            isNative: false,
+            fromTokenAmount: amount, 
+            minReturnAmount: u0}
+            (list 
+                {adapterImpl: .stackswapAdapter, 
+                poolType: u0, 
+                swapFuncType: SWAP_X_FOR_Y, 
+                fromToken: (some .wrapped-stx-token), 
+                toToken: (some .token-usda), 
+                fromTokenAlex:none, 
+                toTokenAlex: none, 
+                lpToken: (some .liquidity-token-v5k0yl5ot8l),
+                weightX: u0, 
+                weightY: u0, 
+                factor: u0,
+                dx: amount, 
+                minDy: none,
+                rate: u1,
+                isMul: true}
+            )
+        ))
+        (ok true)
+    )
+
+)
+
+(define-public (test_stackswap1) 
+    (let
+        (
+            (weight u0)
+            (amount u1000)
+        ) 
+        ;; swap usda for wstx through fixed weight pool
+        (try! (contract-call? .aggregator unxswap 
+            {
+            fromToken: .token-usda, 
+            toToken: .wrapped-stx-token, 
+            isNative: false,
+            fromTokenAmount: amount, 
+            minReturnAmount: u0}
+            (list 
+                {adapterImpl: .stackswapAdapter, 
+                poolType: u0, 
+                swapFuncType: SWAP_Y_FOR_X, 
+                fromToken: (some .token-usda), 
+                toToken: (some .wrapped-stx-token), 
+                fromTokenAlex:none, 
+                toTokenAlex: none, 
+                lpToken: (some .liquidity-token-v5k0yl5ot8l),
+                weightX: u0, 
+                weightY: u0, 
+                factor: u0,
+                dx: amount, 
+                minDy: none,
+                rate: u1,
+                isMul: true}
+            )
+        ))
+        (ok true)
+    )
+
 )
