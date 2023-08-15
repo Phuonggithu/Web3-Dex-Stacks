@@ -127,7 +127,9 @@
             toToken: .token-wstx, 
             isNative: false,
             fromTokenAmount: amount, 
-            minReturnAmount: u0}
+            minReturnAmount: u0,
+            orderId: u0,
+            decimal: u0}
             (list 
                 {adapterImpl: .alexAdapter, 
                 poolType: FIXED_WEIGHT, 
@@ -162,7 +164,9 @@
             toToken: .token-xbtc, 
             isNative: false,
             fromTokenAmount: amount, 
-            minReturnAmount: u0}
+            minReturnAmount: u0,
+            orderId: u0,
+            decimal: u0}
             (list 
                 {adapterImpl: .alexAdapter, 
                 poolType: FIXED_WEIGHT, 
@@ -211,7 +215,9 @@
             toToken: .token-xbtc, 
             isNative: false,
             fromTokenAmount: amount, 
-            minReturnAmount: u0}
+            minReturnAmount: u0,
+            orderId: u0,
+            decimal: u0}
             (list 
                 {adapterImpl: .alexAdapter, 
                 poolType: TRADING_POOL, 
@@ -245,7 +251,9 @@
             toToken: .token-wstx, 
             isNative: false,
             fromTokenAmount: amount, 
-            minReturnAmount: u0}
+            minReturnAmount: u0,
+            orderId: u0,
+            decimal: u0}
             (list 
                 {adapterImpl: .alexAdapter, 
                 poolType: TRADING_POOL, 
@@ -279,7 +287,9 @@
             toToken: .token-wusda, 
             isNative: false,
             fromTokenAmount: amount, 
-            minReturnAmount: u0}
+            minReturnAmount: u0,
+            orderId: u0,
+            decimal: u0}
             (list 
                 {adapterImpl: .alexAdapter, 
                 poolType: SIMPLE_WEIGHT, 
@@ -313,7 +323,9 @@
             toToken: .age000-governance-token, 
             isNative: false,
             fromTokenAmount: amount, 
-            minReturnAmount: u0}
+            minReturnAmount: u0,
+            orderId: u0,
+            decimal: u0}
             (list 
                 {adapterImpl: .alexAdapter, 
                 poolType: SIMPLE_WEIGHT, 
@@ -349,7 +361,9 @@
             toToken: .wrapped-stx-token, 
             isNative: true,
             fromTokenAmount: amount, 
-            minReturnAmount: u249}
+            minReturnAmount: u249,
+            orderId: u0,
+            decimal: u0}
             (list 
                 {adapterImpl: .arkadAdapter, 
                 poolType: FIXED_WEIGHT, 
@@ -385,7 +399,9 @@
             toToken: .token-usda, 
             isNative: false,
             fromTokenAmount: amount, 
-            minReturnAmount: u0}
+            minReturnAmount: u0,
+            orderId: u0,
+            decimal: u0}
             (list 
                 {adapterImpl: .arkadAdapter, 
                 poolType: FIXED_WEIGHT, 
@@ -420,7 +436,9 @@
             toToken: .token-usda, 
             isNative: false,
             fromTokenAmount: amount, 
-            minReturnAmount: u0}
+            minReturnAmount: u0,
+            orderId: u0,
+            decimal: u0}
             (list 
                 {adapterImpl: .arkadAdapter, 
                 poolType: FIXED_WEIGHT, 
@@ -470,7 +488,9 @@
             toToken: .token-usda, 
             isNative: false,
             fromTokenAmount: amount, 
-            minReturnAmount: u0}
+            minReturnAmount: u0,
+            orderId: u0,
+            decimal: u0}
             (list 
                 {adapterImpl: .stackswapAdapter, 
                 poolType: u0, 
@@ -507,7 +527,9 @@
             toToken: .wrapped-stx-token, 
             isNative: false,
             fromTokenAmount: amount, 
-            minReturnAmount: u0}
+            minReturnAmount: u0,
+            orderId: u0,
+            decimal: u0}
             (list 
                 {adapterImpl: .stackswapAdapter, 
                 poolType: u0, 

@@ -23,7 +23,7 @@
 
 
 (define-public (unxswap 
-    (baseRequest {fromToken: <ft-trait-arka>, toToken: <ft-trait-arka>, isNative: bool,fromTokenAmount: uint, minReturnAmount: uint}) 
+    (baseRequest {fromToken: <ft-trait-arka>, toToken: <ft-trait-arka>, isNative: bool,fromTokenAmount: uint, minReturnAmount: uint, orderId: uint, decimal: uint}) 
     (batches (list 10 
       {adapterImpl: <dispatcherInterface>, 
       poolType: uint, 
@@ -39,6 +39,8 @@
     (let
       (
           (sender tx-sender)
+          (orderId (get orderId baseRequest))
+          (decimal (get decimal baseRequest))
           (isNative (get isNative baseRequest))
           (toToken (get toToken baseRequest))
           (fromTokenAmount (get fromTokenAmount baseRequest))
@@ -51,7 +53,7 @@
       )
 
       ;; emit event: OrderRecord
-      (print {orderRecord: {fromToken: fromToken, toToken: toToken, isNative: isNative, sender: sender, fromAmount: fromTokenAmount, returnAmount:  dy}})
+      (print {orderRecord: {fromToken: fromToken, toToken: toToken, isNative: isNative, sender: sender, fromAmount: fromTokenAmount, returnAmount:  dy, orderId: orderId, decimal: decimal}})
       ;; return amount delta
       (checkMinReturn (getBalance toToken isNative sender) balanceBefore minReturnAmount)
     )
@@ -74,7 +76,6 @@
     (begin 
         (asserts! (>= balanceAfter balanceBefore) ERR_BALANCE_ERROR)
         (asserts! (>= (- balanceAfter balanceBefore) minReturnAmount) ERR_RETURN_AMOUNT_IS_NOT_ENOUGH)
-        (print {balanceAfter: balanceAfter, balanceBefore: balanceBefore, minReturnAmount: minReturnAmount})
         (ok (- balanceAfter balanceBefore))
     )
     
