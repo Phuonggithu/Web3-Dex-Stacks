@@ -17,6 +17,7 @@
 (define-constant ERR_JUMP_FAILED (err u1006))
 (define-constant ERR_NOT_OK (err u1007))
 (define-constant ERR_NOT_AUTHORIZED (err u1008))
+(define-constant ERR_RATE_IS_ZERO (err u1009))
 
 
 
@@ -39,7 +40,6 @@
       (
           (sender tx-sender)
           (isNative (get isNative baseRequest))
-          (batchLen (len batches))
           (toToken (get toToken baseRequest))
           (fromTokenAmount (get fromTokenAmount baseRequest))
           (minReturnAmount (get minReturnAmount baseRequest))
@@ -128,6 +128,7 @@
                     ))) )
         )
         (asserts! (>= dy (default-to u0 minDy)) ERR_RETURN_AMOUNT_IS_NOT_ENOUGH)
+        (asserts! (> rate u0) ERR_RATE_IS_ZERO)
         (ok (handlePrecision dy rate isMul))
     )
     err-value (err err-value)

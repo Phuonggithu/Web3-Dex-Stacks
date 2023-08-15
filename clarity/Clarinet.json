@@ -1,15 +1,1 @@
-{
-    "name": "alex-v1",
-    "dependencies": {
-        "alex_dao": {
-            "commit": "b589358d061fe8a62e5bddd206b7a4b2e2ca01ad",
-            "git": "git@github.com:alexgo-io/alex-dao.git",
-            "contracts_path": "contracts"
-        },
-        "alex_dao_proposals": {
-            "commit": "main",
-            "git": "git@github.com:alexgo-io/alex-dao-proposals.git",
-            "contracts_path": "contracts"
-        }
-    }
-}
+{ "name": "alex-v1", "dependencies": { "alex_dao": { "commit": "b589358d061fe8a62e5bddd206b7a4b2e2ca01ad", "git": "git@github.com:alexgo-io/alex-dao.git", "contracts_path": "contracts" }, "alex_dao_proposals": { "commit": "main", "git": "git@github.com:alexgo-io/alex-dao-proposals.git", "contracts_path": "contracts" } } }

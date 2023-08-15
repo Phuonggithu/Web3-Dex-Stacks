@@ -15,7 +15,7 @@
 (define-constant ERR_WRONG_TO_TOKEN (err u9007))
 (define-constant ERR_WRONG_LP_TOKEN (err u9008))
 
-(define-constant ONE_8 u100000000) ;; 8 decimal places
+(define-constant ONE_8 u100000000) 
 
 
 
@@ -68,11 +68,11 @@
                 )
             )
         )
+        (asserts! (> dy u0) ERR_SWAP_FAILED)
         (ok {dy: dy})
     )
 )
 
-;; consider fromToken is alex
 (define-private (handleSwapAlexForYSimple (fromToken <ft-trait-alex>) (toToken <ft-trait-alex>)  (dx uint) (minDy (optional uint))) 
     (let
         (
@@ -81,16 +81,12 @@
             (tokenY toToken)
             (tokenYAddr (contract-of tokenY))
         )
-        ;; check fromToken == alex
         (asserts! (is-eq alexTokenAddr fromTokenAddr) ERR_FROM_TOKEN_NOT_MATCH)
-        ;; check pool exists
         (asserts! (is-some (contract-call? .simple-weight-pool-alex get-pool-exists alexTokenAddr tokenYAddr)) ERR_POOL_NOT_EXISTS)
-        ;; contract call do the real swap
         (contract-call? .simple-weight-pool-alex swap-alex-for-y tokenY dx minDy)
     )
 )
 
-;; consider toToken is alex
 (define-private (handleSwapYForAlexSimple (fromToken <ft-trait-alex>) (toToken <ft-trait-alex>)  (dx uint) (minDy (optional uint))) 
     (let
         (
@@ -99,16 +95,12 @@
             (tokenY fromToken)
             (tokenYAddr (contract-of tokenY))
         )
-        ;; check fromToken == alex
-        (asserts! (is-eq alexTokenAddr toTokenAddr) ERR_FROM_TOKEN_NOT_MATCH)
-        ;; check pool exists
+        (asserts! (is-eq alexTokenAddr toTokenAddr) ERR_TO_TOKEN_NOT_MATCH)
         (asserts! (is-some (contract-call? .simple-weight-pool-alex get-pool-exists alexTokenAddr tokenYAddr)) ERR_POOL_NOT_EXISTS)
-        ;; contract call do the real swap
         (contract-call? .simple-weight-pool-alex swap-y-for-alex tokenY dx minDy)
     )
 )
 
-;; consider fromToken is tokenX
 (define-private (handleSwapXForYTrading (fromToken <ft-trait-alex>) (toToken <ft-trait-alex>) (factor uint) (dx uint) (minDy (optional uint))) 
     (let
         (
@@ -117,14 +109,11 @@
             (tokenXAddr (contract-of tokenX))
             (tokenYAddr (contract-of tokenY))
         )
-        ;; check pool exists
         (asserts! (is-some (contract-call? .amm-swap-pool-v1-1 get-pool-exists tokenXAddr tokenYAddr factor)) ERR_POOL_NOT_EXISTS)
-        ;; contract call do the real swap
         (contract-call? .amm-swap-pool-v1-1 swap-x-for-y tokenX tokenY factor dx minDy)
     )
 )
 
-;; consider fromToken is tokenY
 (define-private (handleSwapYForXTrading (fromToken <ft-trait-alex>) (toToken <ft-trait-alex>) (factor uint) (dx uint) (minDy (optional uint))) 
     (let
         (
@@ -133,9 +122,7 @@
             (tokenXAddr (contract-of tokenX))
             (tokenYAddr (contract-of tokenY))
         )
-        ;; check pool exists
         (asserts! (is-some (contract-call? .amm-swap-pool-v1-1 get-pool-exists tokenXAddr tokenYAddr factor)) ERR_POOL_NOT_EXISTS)
-        ;; contract call do the real swap
         (contract-call? .amm-swap-pool-v1-1 swap-y-for-x tokenX tokenY factor dx minDy)
     )
 )
@@ -154,11 +141,8 @@
             (tokenYAddr (contract-of tokenY))
         )
         (asserts! (is-eq (+ weightFrom weightTo) ONE_8) ERR_WEIGHT_SUM)
-        ;; check fromToken == wstx
         (asserts! (is-eq wstxTokenAddr fromTokenAddr) ERR_FROM_TOKEN_NOT_MATCH)
-        ;; check pool exists
         (asserts! (is-some (contract-call? .fixed-weight-pool-v1-01 get-pool-exists wstxTokenAddr tokenYAddr weightX weightY)) ERR_POOL_NOT_EXISTS)
-        ;; contract call do the real swap
         (contract-call? .fixed-weight-pool-v1-01 swap-wstx-for-y tokenY weightY dx minDy)
     )
 )
@@ -174,11 +158,8 @@
             (tokenYAddr (contract-of tokenY))
         )
         (asserts! (is-eq (+ weightFrom weightTo) ONE_8) ERR_WEIGHT_SUM)
-        ;; check fromToken == wstx
         (asserts! (is-eq wstxTokenAddr toTokenAddr) ERR_TO_TOKEN_NOT_MATCH)
-        ;; check pool exists
         (asserts! (is-some (contract-call? .fixed-weight-pool-v1-01 get-pool-exists wstxTokenAddr tokenYAddr weightX weightY)) ERR_POOL_NOT_EXISTS)
-        ;; contract call do the real swap
         (contract-call? .fixed-weight-pool-v1-01 swap-y-for-wstx tokenY weightY dx minDy)
     )
 )
